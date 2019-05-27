@@ -1,0 +1,89 @@
+<?php
+
+require_once 'SModel.php';
+
+class ModeleUtilisateur {
+    private $id, $login, $nom, $prenom, $motDePasse, $admin;
+
+    public function __construct($id = NULL, $login = NULL, $nom = NULL, $prenom = NULL, $motDePasse = NULL, $admin = 0) {
+        // valeurs nulles si pas de passage de parametres
+        if (!is_null($id)) {
+            $this->id = $id;
+            $this->login = $login;
+            $this->nom = $nom;
+            $this->prenom = $prenom;
+            $this->motDePasse = $motDePasse;
+            $this->admin = $admin;
+        }
+    }
+
+    function setId($id) {
+        $this->id = $id;
+    }
+
+    function setLogin($login) {
+        $this->login = $login;
+    }
+
+    function setNom($nom) {
+        $this->nom = $nom;
+    }
+
+    function setPrenom($prenom) {
+        $this->prenom = $prenom;
+    }
+
+    function setMotDePasse($motDePasse) {
+        $this->motDePasse = $motDePasse;
+    }
+
+    function setAdmin($admin) {
+        $this->admin = $admin;
+    }
+
+    function getId() {
+        return $this->id;
+    }
+
+    function getLogin() {
+        return $this->login;
+    }
+
+    function getNom() {
+        return $this->nom;
+    }
+
+    function getPrenom() {
+        return $this->prenom;
+    }
+
+    function getMotDePasse() {
+        return $this->motDePasse;
+    }
+
+    function getAdmin() {
+        return $this->admin;
+    }
+
+    public function __toString() {
+        return $this->id;
+    }
+
+    public static function insert($login, $nom, $prenom, $motDePasse) {
+        try {
+            $database = SModel::getInstance();
+            $query = "INSERT INTO utilisateur VALUES (:login, :nom, :prenom, :motDePasse)";
+            $statement = $database->prepare($query);
+            $statement->execute([
+                'login' => $login,
+                'nom' => $nom,
+                'prenom' => $prenom,
+                'motDePasse' => $motDePasse
+            ]);
+            return TRUE;
+        } catch (PDOException $e) {
+            printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
+            return FALSE;
+        }
+    }
+}
