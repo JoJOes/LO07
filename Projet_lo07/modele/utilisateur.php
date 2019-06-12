@@ -204,14 +204,16 @@ class ModeleUtilisateur {
                 return FALSE;
             }
             else{
-                session::ajouterSession($utilisateur[0]->getId());
-                return true;
+                session_start();
+                $_SESSION['id']=$utilisateur[0].getId();
             }
         } catch (PDOException $e) {
             printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
             return FALSE;
         }    
     }
-    
+    public static function verifierExistence($login){
+        
+    }
     
 }
