@@ -2,7 +2,7 @@
 require 'fragmentHeader.html';
 ?>
 <div class="login-form">
-    <form action="router.php?action=inscription" method="post">
+    <form action="router.php?action=validerInscription" method="post">
         <h2 class="text-center">S'inscrire</h2>
         <div class="form-group">
             <input type="text" name="login" class="form-control" placeholder="Login">

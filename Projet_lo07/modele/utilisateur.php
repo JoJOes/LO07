@@ -206,10 +206,10 @@ class ModeleUtilisateur {
             if(sizeof($utilisateur)==0){
                 return FALSE;
             }
-            else{
-                session_start();
-                $_SESSION['id']=$utilisateur[0].getId();
-            }
+            
+            session_start();
+            $_SESSION['id']=$utilisateur[0].getId();
+            return TRUE;
         } catch (PDOException $e) {
             printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
             return FALSE;
