@@ -3,13 +3,15 @@ require 'fragmentHeader.html';
 require 'MenuUtilisateur.html';
 //require'../modele/vehicule.php';
 //require '../modele/place.php';
+require '../Fonction.php';
+leverErreur($message);
 ?>
 <div class='container'>
     <div class="row">
         <div class='page-reservation'>
             <div class='tete-reservation'><h1>Choissiez une place à réserver</h1></div>
             <div class='parking-reservation'><img src='images.jpg' width="40px" height="40px"><h3>Parking</h3></div>
-            <form method="get" action="router.php">
+            <form method="get" action="router.php?action=validerReservation">
                 <input type='hidden' name='action' value='choisirplace'>
                 <div class='form-group'>
                     <div class="col-md-1"></div>
@@ -35,22 +37,22 @@ require 'MenuUtilisateur.html';
                      <div class='col-md-4'>
                         <label for='list-vehicules2'>Vehicule</label>
                         <select id='list-vehicules2' class='form-control' disabled='disabled'>
-                            <?php
-                                printf("<option>".$_GET('list-vehicule')."</option>");
-                            ?>
+                            //<?php
+//                                printf("<option>".$_GET('list-vehicule')."</option>");
+//                            ?>
                         </select>
                     </div>
                     <div class='col-md-2'>
                         <label for='date1' >Date de début</label>
-                        <?php
-                        printf("<input class='form-control' type='text' name='datedebut' value='%s' disabled='disabled'>",$_GET['datedebut']);
-                        ?>
+                        //<?php
+//                        printf("<input class='form-control' type='text' name='datedebut' value='%s' disabled='disabled'>",$_GET['datedebut']);
+//                        ?>
                     </div>
                     <div class='col-md-2'>
                         <label for='date2'>Date de fin</label>
-                        <?php
-                        printf("<input class='form-control' type='text' name='datefin' value='%s' disabled='disabled'>",$_GET['datefin']);
-                        ?>
+                        //<?php
+//                        printf("<input class='form-control' type='text' name='datefin' value='%s' disabled='disabled'>",$_GET['datefin']);
+//                        ?>
                     </div>
 
                 </div>

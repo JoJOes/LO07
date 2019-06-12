@@ -38,12 +38,12 @@ class place {
             return NULL;
         }    
     }
-    public static function estOccupe($id,$dateDebut,$dateFin){
+    public static function estOccupe($id,$siteId,$dateDebut,$dateFin){
         try{
             $database = SModel::getInstance();
-            $query = "select * from gare where place_id = :id )";
+            $query = "select * from gare where place_id = :id and site_id=:siteId )";
             $statement = $database->prepare($query);
-            $statement->execute(['place_id'=>$id]);
+            $statement->execute(['place_id'=>$id,'siteId'=>$siteId]);
             $listeGare=$statement->fetchAll(PDO::FETCH_CLASS,"gare");
             $occupe=false;
             foreach($listeGare as $gare){

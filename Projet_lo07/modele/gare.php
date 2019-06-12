@@ -5,14 +5,15 @@ require_once 'modele/place.php';
 require_once 'modele/SModel.php';
 require_once 'Fonction.php';
 class Gare{
-    private  $vehiculeId,$placeId,$siteId,$dateDebut,$dateFin;
-    public function __contruct($vehiculeId, $placeId,$siteId,$dateDebut, $dateFin){
+    private  $vehiculeId,$placeId,$siteId,$dateDebut,$dateFin,$prix;
+    public function __contruct($vehiculeId, $placeId,$siteId,$dateDebut, $dateFin,$prix){
         if(!is_null($vehiculeId)){
             $this->placeId=$placeId;
             $this->vehiculeId=$vehiculeId;
             $this->dateDebut=$dateDebut;
             $this->dateFin=$dateFin;
             $this->siteId=$siteId;
+            $this->prix=$prix;
 
         }
     }
@@ -31,6 +32,9 @@ class Gare{
     function setDateFin($dateFin) {
         $this->dateFin = $dateFin;
     }
+    function setPrix($prix) {
+        $this->prix = $prix;
+    }
     function getPlaceId() {
         return $this->placeId;
     }
@@ -47,6 +51,9 @@ class Gare{
 
     function getDateFin() {
         return $this->dateFin;
+    }
+    function getPrix(){
+        return $this->prix;
     }
     public function toString(){
         printf("<td>%d</td><td>%s</td><td>%d</td><td>%s</td><td>%s</td>", 
@@ -65,17 +72,19 @@ class Gare{
         }  
     }
     //pour ajouter la voiture dans la liste Gare
-    public static function reserverPlace($vehicule_id,$place_id,$date_debut,$date_fin){
+    public static function reserverPlace($vehicule_id,$place_id,$site_id,$date_debut,$date_fin,$prix){
         try{
            if(gare::estGarable($vehiculeId,$place_id,$dateDebut,$dateFin)){
                 $database=SModel::getInstance();
-                $query="insert into table gare values (:vehicule_id,:place_id ,:date_debut,:date_fin)";
+                $query="insert into table gare values (:vehicule_id,:place_id ,:site:id,:date_debut,:date_fin,:prix)";
                 $statement=$database->prepare($query);
                 $statement->execute([
                     'vehicule_id'=>$vehicule_id,
                     'place_id'=>$place_id,
+                    'site_id'=>$site_id,
                     'date_debut'=>$date_debut,
-                    'date_fin'=>$date_fin
+                    'date_fin'=>$date_fin,
+                    'prix'=>$prix
                 ]);
            }
            else {
@@ -120,6 +129,41 @@ class Gare{
           }
           return $listeReservation;
            
+        } catch (PDOException $e) {
+            printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
+            return NULL;
+        }
+    }
+    public static function afficherReservation($id){
+        try{
+          $listeVehicules=utilisateur::getVehicule($id);
+          $database=SModel::getInstance();
+          foreach  ($listeVehicules as $ele){
+            $query="select G.vehicule_id G.place_id S.label G.date_debut G.date_fin G.prix from gare as G, site as S where G.vehicule_id=:vehicule_id and G.site_id=S.id and date_fin > GETDATE()";
+            $statement=$database->prepare($query);
+            $statement->execute([
+                'vehicule_id'=>$ele.getNoPlaque(),
+            ]);
+            $compteur=1;
+            while($ligne = mysqli_fetch_array($statement,MYSQLI_NUM)){
+              echo'<tr>';
+              printf("<td>%d</td>",$compteur);
+              printf("<td>%s</td><td>%d</td><td>%s</td><td>%s</td><td>%s</td><td>%f</td>",$ligne[0],$ligne[1],$ligne[2],$ligne[3],$ligne[4],$ligne[5]);
+              echo '<td>';
+              echo "<form action='router.php?action=supprimer' method='post'>";
+              printf("<input type='hidden' name='vehiculeId' valu   e='%s'>",$ligne[0]);
+              printf("<input type='hidden' name='placeId' value='%d'>",$ligne[1]);
+              printf("<input type='hidden' name='Label' value='%s'>",$ligne[2]);
+              printf("<input type='hidden' name='dateDebut' value='%s'>",$ligne[3]);
+              printf("<input type='hidden' name='dateFin' vallue='%s'>,$ligne[4]");
+              printf("<input type='hidden' name='prix' vallue='%f'>,$ligne[5]");
+              echo"<input type='submit' value='supprimer'>";
+              echo'</form>';
+              echo'</td>';
+              echo'</tr>';
+            }
+              
+          }
         } catch (PDOException $e) {
             printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
             return NULL;

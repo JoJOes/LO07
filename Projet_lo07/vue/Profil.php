@@ -1,6 +1,7 @@
 <?php 
 require 'fragmentHeader.html';
 require 'menuUtilisateur.html';
+require'../modele/gare.php'
 ?>
 <h1><img src='espaceClient.png' style="width: 100px;height: 100px"> Espace personnelle</h1>
 <div class="tab">
@@ -65,11 +66,20 @@ require 'menuUtilisateur.html';
 </div>
 <div class="tabcontent" id="mesreservation">
     <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-8">
             <table title="Les places reservees">
                 <tr>
-                    <th></th>
+                    <th>Numéro</th>
+                    <th>Numéro de plaque du véhicule</th>
+                    <th>Numéro de place</th>
+                    <th>Label du site</th>
+                    <th>Date de début</th>
+                    <th>Date de fin</th>
+                    <th>Prix</th>
                 </tr>
+                <?php
+                    Gare::afficherReservation($id)
+                ?>
             </table>
         </div>
     </div>

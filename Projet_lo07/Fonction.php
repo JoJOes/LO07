@@ -1,3 +1,4 @@
+
 <?php
 require_once 'modele/SModel.php';
 function betweenDates($date1,$dateDebut, $dateFin){
@@ -43,32 +44,36 @@ function getPrixReservation($prix, $dateDebut, $dateFin) {
     }
     return $diffHeures*$prix;
 }
-
-$today= getdate();
-echo strtotime($today);
+function leverErreur($message){
+    if($message!=NULL){
+        printf("<div class='text-center' style='color:red'>%s</div>",$message);
+    }
+}
+//$today= getdate();
+////echo strtotime($today);
+////
+//// $another="2019-06-10 22:39:16";
+////   if ($today < strtotime($another)){
+////       echo"true";
+////   }
+////   else{
+////       echo"false";
+////   }
 //
- $another="2019-06-10 22:39:16";
-//   if ($today < strtotime($another)){
+//$format = "%H:%M:%S %d-%B-%Y";
+//$timestamp = time();
+//echo $strTime = strftime($format, $timestamp );
+//echo  "<br />";
+//echo "Timestamp:" . $timestamp;
+//if ($timestamp < strtotime($another)){
 //       echo"true";
 //   }
 //   else{
 //       echo"false";
 //   }
-
-$format = "%H:%M:%S %d-%B-%Y";
-$timestamp = time();
-echo $strTime = strftime($format, $timestamp );
-echo  "<br />";
-echo "Timestamp:" . $timestamp;
-if ($timestamp < strtotime($another)){
-       echo"true";
-   }
-   else{
-       echo"false";
-   }
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//
+///*
+// * To change this license header, choose License Headers in Project Properties.
+// * To change this template file, choose Tools | Templates
+// * and open the template in the editor.
+// */

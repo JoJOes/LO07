@@ -18,7 +18,7 @@ require 'fragmentHeader.html';
             <a href="#" class="pull-right">Mot de passe oublié ?</a>
         </div>
     </form>
-    <p class="text-center"><a href="router.php?action=inscription">Créer un nouveau compte</a></p>
+    <p class="text-center" style='margin-left: 20%'><a href="router.php?action=inscription">Créer un nouveau compte</a></p>
 </div>
 <?php
 require 'fragmentFooter.html';
