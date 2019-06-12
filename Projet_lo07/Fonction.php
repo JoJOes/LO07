@@ -25,10 +25,25 @@ function getListeAeroports(){
        return $listeAeroport;
     } catch (PDOException $e) {
         printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
-        return NULL;  
+        return NULL;
     }
-  
+
 }
+
+function getPrixReservation($prix, $dateDebut, $dateFin) {
+    $dateDebutFormat = new DateTime($dateDebut, new DateTimeZone('Pacific/Nauru'));
+    $dateFinFormat = new DateTime($dateFin, new DateTimeZone('Pacific/Nauru'));
+
+    $diff = $dateDebutFormat->diff($dateFinFormat);
+    $diffHeures = $diff->h + $diff->d*24;
+    $diffMinutes = $diff->i;
+
+    if ($diffMinutes > 0) {
+        $diffHeures++;
+    }
+    return $diffHeures*$prix;
+}
+
 $today= getdate();
 echo strtotime($today);
 //
@@ -52,9 +67,8 @@ if ($timestamp < strtotime($another)){
        echo"false";
    }
 
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
