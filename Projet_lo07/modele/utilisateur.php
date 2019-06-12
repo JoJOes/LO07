@@ -94,7 +94,7 @@ class ModeleUtilisateur {
             $query = "select * from utilisateur where id=:id";
             $statement = $database->prepare($query);
             $statement->execute([
-                'id' => $id              
+                'id' => $id
             ]);
             $utilisateur=$statement->fetchAll(PDO::FETCH_CLASS,"utilisateur");
             return $utilisateur[0];
@@ -109,13 +109,13 @@ class ModeleUtilisateur {
             $query = "select * from possession where utilisateur_id=:id";
             $statement = $database->prepare($query);
             $statement->execute([
-                'id' => $id              
+                'id' => $id
             ]);
             $possession=$statement->fetchAll(PDO::FETCH_CLASS,"possession");
             $vehicules=array();
             foreach($possession as $ele){
                 $vehicules[]=Vehicule::getVehiculeById($ele->getVehiculeId());
-                
+
             }
             return $vehicules;
         } catch (PDOException $e) {
@@ -174,9 +174,9 @@ class ModeleUtilisateur {
         } catch (PDOException $e) {
             printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
             return FALSE;
-        }    
+        }
     }
-    public static function supprimmerVehicule($id,$noPlaque){
+    public static function supprimerVehicule($id,$noPlaque){
         try{
             $database = SModel::getInstance();
             $query = "delete from possession where utilisateur_id=:id and vehicule_id=:noPlaque";
@@ -188,7 +188,7 @@ class ModeleUtilisateur {
         } catch (PDOException $e) {
             printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
             return FALSE;
-        }    
+        }
     }
     public static function verifierAcces($login,$motDePasse){
         try{
@@ -210,10 +210,26 @@ class ModeleUtilisateur {
         } catch (PDOException $e) {
             printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
             return FALSE;
-        }    
+        }
     }
-    public static function verifierExistence($login){
-        
+    public static function verifierExistence($login) {
+        try {
+            $database = SModel::getInstance();
+            $query = "SELECT * FROM utilisateur WHERE login = :login";
+            $statement = $database->prepare($query);
+            $statement->execute([
+                'login' => $login
+            ]);
+            $utilisateur = $statement->fetchAll(PDO::FETCH_CLASS, "utilisateur");
+            if (sizeof($utilisateur) > 0) {
+                return FALSE;
+            }
+            return TRUE;
+        }
+    } catch (PDOException $e) {
+        printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
+        return FALSE;
     }
-    
+}
+
 }
