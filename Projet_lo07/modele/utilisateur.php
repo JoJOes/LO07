@@ -74,7 +74,7 @@ class ModeleUtilisateur {
     public static function insert($login, $nom, $prenom, $motDePasse) {
         try {
             if (!verifierInscription($login, $nom, $prenom, $motDePasse)) {
-                Header('Location: router.php?action=inscriptionFalse');
+                return FALSE;
             }
             $database = SModel::getInstance();
             $query = "INSERT INTO utilisateur VALUES (:login, :nom, :prenom, :motDePasse)";
@@ -206,7 +206,7 @@ class ModeleUtilisateur {
             if(sizeof($utilisateur)==0){
                 return FALSE;
             }
-            
+
             session_start();
             $_SESSION['id']=$utilisateur[0].getId();
             return TRUE;
@@ -218,7 +218,7 @@ class ModeleUtilisateur {
     public static function verifierInscription($login, $nom, $prenom, $motDePasse) {
         try {
             if ($login == NULL || $nom == NULL || $prenom == NULL || $motDePasse == NULL) {
-                return NULL;
+                return 2;
             }
 
             $database = SModel::getInstance();
@@ -229,14 +229,12 @@ class ModeleUtilisateur {
             ]);
             $utilisateur = $statement->fetchAll(PDO::FETCH_CLASS, "utilisateur");
             if (count($utilisateur) > 0) {
-                return FALSE; // si le login existe déjà
+                return 1; // si le login existe déjà
             }
-            return TRUE;
+            return 3;
+        } catch (PDOException $e) {
+            printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
+            return 0;
         }
-    } catch (PDOException $e) {
-        printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
-        return FALSE;
     }
-}
-
 }
