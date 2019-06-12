@@ -1,3 +1,6 @@
+<?php
+require 'fragmentHeader.html';
+?>
 <div class="login-form">
     <form action="router.php" method="post">
         <input type="hidden" id="action" value="validerLogin">
@@ -18,4 +21,9 @@
     </form>
     <p class="text-center"><a href="#">Creer un nouveau compte</a></p>
 </div>
+<?php
+require 'fragmentFooter.html';
+
+
+
 
