@@ -73,7 +73,7 @@ class ModeleUtilisateur {
 
     public static function insert($login, $nom, $prenom, $motDePasse) {
         try {
-            if (!verifierExistence($login)) {
+            if (!verifierInscription($login, $nom, $prenom, $motDePasse)) {
                 Header('Location: router.php?action=inscriptionFalse');
             }
             $database = SModel::getInstance();
@@ -215,8 +215,12 @@ class ModeleUtilisateur {
             return FALSE;
         }
     }
-    public static function verifierExistence($login) {
+    public static function verifierInscription($login, $nom, $prenom, $motDePasse) {
         try {
+            if ($login == NULL || $nom == NULL || $prenom == NULL || $motDePasse == NULL) {
+                return NULL;
+            }
+
             $database = SModel::getInstance();
             $query = "SELECT * FROM utilisateur WHERE login = :login";
             $statement = $database->prepare($query);
