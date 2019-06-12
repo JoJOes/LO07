@@ -50,8 +50,8 @@
            return $this->carburant;
        }
        public function toString(){
-           printf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%d</td><td>%f</td><td>%f</td></tr>", 
-           $this->getNoPlaque(), $this->getMarque(), $this->getModele(),$this->transmission, $this->getPrix(),$this->getCarburant());
+           printf("<td>%s</td><td>%s</td><td>%s</td><td>%d</td><td>%f</td>", 
+           $this->getNoPlaque(), $this->getMarque(), $this->getModele(),$this->transmission, $this->getPrix());
        }
        public static function insert($noPlaque,$marque,$modele,$transmission,$prix,$carburant){
            try{
@@ -95,9 +95,9 @@
       public static function estOccupe($noMarque, $dateDebut, $dateFin){
           try{
           $database = SModel::getInstance();
-          $query = "select * from location where vehicule_id = :noMarque)";
+          $query = "select * from location where vehicule_id = :noMarque and GETDATE()< :date_fin";
           $statement = $database->prepare($query);
-          $statement->execute(['noMarque'=>$noMarque]);
+          $statement->execute(['noMarque'=>$noMarque,'date_fin'=>$dateFin]);
           $listeLocation=$statement->fetchAll(PDO::FETCH_CLASS,"location");
           $occupe=false;
           if(size_of($listeLocation)==0){

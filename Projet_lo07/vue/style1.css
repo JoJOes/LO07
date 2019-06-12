@@ -1,0 +1,118 @@
+  div.container{
+                background-image: url("./background.jpg"); 
+                padding-top: 2%;
+                padding-bottom: 2%;
+               body{color: red}
+
+            }
+.container {
+    margin-top: 80px;
+    background-color: #e6e6e6;
+    width: 90%; 
+}
+
+.dropdown:hover .dropdown-menu{
+    display: block;
+}
+
+.login-form {
+    width: 340px;
+    margin: 50px auto;
+}
+.login-form form {
+    width: 400px;
+    margin-bottom: 15px;
+    background: #f7f7f7;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    padding: 30px;
+}
+.login-form h2 {
+    margin: 0 0 15px;
+}
+.form-control, .btn {
+    min-height: 38px;
+    border-radius: 2px;
+}
+.login-form .btn {        
+    font-size: 15px;
+    font-weight: bold;
+}
+.profil{
+    display: box;
+    border-style: solid;
+    border-color: #737373;
+    border-width: 2px;
+}
+.tab{
+    overflow: hidden;
+    border: 2px solid #ccc;
+    background-color: #f1f1f1;
+}
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+.tab button:hover{
+   background-color: #ddd;
+}
+.tab button.active {
+  background-color: #b3b3b3;
+}
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}   
+.tete-reservation{
+    text-align: center;
+    padding-top: 50px;
+}
+.parking-reservation{
+    text-align: center;
+    /*margin:10% 10% 10% 10%;*/
+    border:solid;
+    
+}
+.form-control{
+    vertical-align: top;
+}
+#list-aeroport,#list-sites,#list-sites2,#list-vehicules2{
+    /*width: 300%*/
+}
+/*#list-vehicules{
+    width: 300px
+}*/
+
+
+
+/*.form-aeroport,.form-date,.form-site,.form-vehicule,.form-place{
+  float: left;
+}*/
+
+/*input.form-control{
+    width: 200px;
+ 
+}*/
+/*.form-group{
+    margin-left: 200px;
+}*/
+.form-date,.form-vehicule,.form-place{
+    /*margin-left: 20px*/
+}
+.btn-default{
+    margin-left: 20px;
+    margin-top: 25px;
+}
+.page-reservation{
+    background:#f1f1f1;
+    margin: 50px 200px 50px 200px;
+    padding-bottom: 50px;
+}
+

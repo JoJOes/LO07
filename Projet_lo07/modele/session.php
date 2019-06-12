@@ -6,17 +6,10 @@ class session{
     }
     public static function VerifierAuthentification($id){
         try {
-            $database = SModel::getInstance();
-            $query = "select session_id from session where session_id=:id";
-            $statement = $database->prepare($query);
-            $statement->execute([
-                'id'=>$id
-            ]);
-            $liste=$statement->fetchAll(PDO::FETCH_CLASS,"possession");
-            if(sizeof($liste)==0){
-                return false;
+            if($_SESSION[$id]!=null){
+                return TRUE;
             }
-            return TRUE;
+            return FALSE;
         } catch (PDOException $e) {
             printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
             return NULL;
@@ -24,13 +17,9 @@ class session{
     }
     public static function ajouterSession($id){
         try {
-            $database = SModel::getInstance();
-            $query = "insert into table session values(:id)";
-            $statement = $database->prepare($query);
-            $statement->execute([
-                'id'=>$id
-            ]);
-            return TRUE;
+            session_start();
+            $_SESSION[$id]=$id;
+            return true;
         } catch (PDOException $e) {
             printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
             return NULL;
@@ -38,12 +27,7 @@ class session{
     }
     public static function supprimmerSession($id){
         try{
-            $database = SModel::getInstance();
-            $query = "delete from session where session_id=:id";
-            $statement = $database->prepare($query);
-            $statement->execute([
-                'id'=>$id
-            ]);
+            unset($_SESSION['$id']);
         } catch (PDOException $e) {
             printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
             return NULL;

@@ -1,6 +1,7 @@
 <?php
 
-require_once 'SModel.php';
+require_once 'modele/SModel.php';
+require_once 'modele/session.php';
 
 class ModeleUtilisateur {
     private $id, $login, $nom, $prenom, $motDePasse, $admin;
@@ -66,7 +67,8 @@ class ModeleUtilisateur {
     }
 
     public function __toString() {
-        return $this->id;
+        printf("<tr><td>%s</td><td>%s</td><td>%s</td></tr>",
+        $this->nom(), $this->Prenom(), $this->getAdmin());
     }
 
     public static function insert($login, $nom, $prenom, $motDePasse) {
@@ -86,7 +88,7 @@ class ModeleUtilisateur {
             return FALSE;
         }
     }
-    public static function voirProfil($id){
+    public static function getUtilisateurById($id){
         try{
             $database = SModel::getInstance();
             $query = "select * from utilisateur where id=:id";
@@ -188,21 +190,28 @@ class ModeleUtilisateur {
             return FALSE;
         }    
     }
-    public static function VerifierAuthentification($id){
-         $database = SModel::getInstance();
-            $query = "select session_id from session where session_id=:id";
+    public static function verifierAcces($login,$motDePasse){
+        try{
+            $database = SModel::getInstance();
+            $query = "select * from utilisateur where login=:login and mot_de_passe=:motDePasse";
             $statement = $database->prepare($query);
             $statement->execute([
-                'id'=>$id
+                'login'=>$login,
+                'motDePasse'=>$motDePasse
             ]);
-            $liste=$statement->fetchAll(PDO::FETCH_CLASS,"possession");
-            if(sizeof($liste)==0){
-                return false;
+            $utilisateur=$statement->fetchAll(PDO::FETCH_CLASS,"utilisateur");
+            if(sizeof($utilisateur)==0){
+                return FALSE;
             }
-            return TRUE;
+            else{
+                session::ajouterSession($utilisateur[0]->getId());
+                return true;
+            }
+        } catch (PDOException $e) {
+            printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
+            return FALSE;
+        }    
     }
-    public static function garerVehicule($id){
-        
-    }
+    
     
 }

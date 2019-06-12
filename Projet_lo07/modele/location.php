@@ -123,6 +123,22 @@ class Gare{
             return NULL;  
         }
     }
+    public static function getElementsByIdUtilisateur($id){
+        try{
+            $database=SModel::getInstance();
+          
+            $query="select * from location where utilisateur_id=:utilisateur_id and date_fin > GETDATE()";
+            $statement=$database->prepare($query);
+            $statement->execute([
+                'utilisateur_id'=>$id,
+            ]);
+            $listeLocation=$statement->fetchAll(PDO::FETCH_CLASS,"location");
+            return $listeLocation;
+        } catch (PDOException $e) {
+            printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
+            return NULL;
+        }
+    }
 
 }
 

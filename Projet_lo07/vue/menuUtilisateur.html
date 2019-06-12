@@ -1,0 +1,34 @@
+<script type="text/javascript">
+    function afficherEspacePersonnel(){
+        document.writeln("<ul class='dropdown-menu' role='menu'>");
+        document.writeln("<li><a href='router.php?action=voirprofil'>Votre profil</a></li> ");
+        document.writeln("<li><a href='router.php?action=voirvoiture'>Vos voitures</a></li> ");
+        document.writeln("<li><a href='router.php?action=voirreservation'>Vos reservation</a></li> ");
+        document.writeln("<li><a href='router.php?action=deconnecter'>Se deconnecter</a></li>");
+        document.writeln("</ul>");
+    }
+</script>
+<nav class="navbar navbar-default" role="navigation"> 
+<div class="container-fluid navbar-top"> 
+    <div class="navbar-header"> <a class="navbar-brand" href="#"><h4>Travel Car</h4> </a> </div> 
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right"> 
+            <li><a href="router.php?action=reserver">Reserver une place</a> </li> 
+            <li><a href="router.php?action=louer">Louer une voiture</a></li>
+            <li class="dropdown">
+
+                <a id="labelEP" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="symbolEP.jpg" style="width:20px;height:20px">Espace personnel<span class="caret"></span></a>
+                 <ul class='dropdown-menu' role='menu'>
+                    <li><a href='router.php?action=voirprofil'>Votre profil</a></li>
+                    <li><a href='router.php?action=voirvoiture'>Vos voitures</a></li>
+                    <li><a href='router.php?action=voirreservation'>Vos reservation</a></li>
+                    <hr>
+                    <li><a href='router.php?action=deconnecter'>Se deconnecter</a></li>
+                 </ul>
+            </li>
+    </div>
+</div>
+</nav>
+
+
+

@@ -1,20 +1,26 @@
 <?php
 require_once 'modele/vehicule.php';
+require_once 'modele/utilisateur.php';
 require_once 'modele/place.php';
 require_once 'modele/SModel.php';
 require_once 'Fonction.php';
 class Gare{
-    private  $vehiculeId,$placeId,$dateDebut,$dateFin;
-    public function __contruct($vehiculeId, $placeId, $dateDebut, $dateFin){
+    private  $vehiculeId,$placeId,$siteId,$dateDebut,$dateFin;
+    public function __contruct($vehiculeId, $placeId,$siteId,$dateDebut, $dateFin){
         if(!is_null($vehiculeId)){
             $this->placeId=$placeId;
             $this->vehiculeId=$vehiculeId;
             $this->dateDebut=$dateDebut;
             $this->dateFin=$dateFin;
+            $this->siteId=$siteId;
+
         }
     }
     function setPlaceId($placeId) {
         $this->placeId = $placeId;
+    }
+    function setSiteId($siteId){
+        $this->siteId=$siteId;
     }
     function setVehiculeId($vehiculeId) {
         $this->vehiculeId = $vehiculeId;
@@ -28,7 +34,9 @@ class Gare{
     function getPlaceId() {
         return $this->placeId;
     }
-
+    function getSiteId(){
+        return $this->siteId;
+    }
     function getVehiculeId() {
         return $this->vehiculeId;
     }
@@ -41,11 +49,11 @@ class Gare{
         return $this->dateFin;
     }
     public function toString(){
-        printf("<tr><td>%d</td><td>%s</td><td>%s</td><td>%s</td></tr>", 
-        $this-> $this->getVehiculeId(), getPlaceId(), $this->getDateDebut(), $this->dateFin());
+        printf("<td>%d</td><td>%s</td><td>%d</td><td>%s</td><td>%s</td>", 
+        $this-> $this->getVehiculeId(), getPlaceId(),getSiteId(), $this->getDateDebut(), $this->dateFin());
     }
     //pour verifier si cette voiture est deja gare' ou si cette place est deja occupe
-    public static function estGarable($vehiculeId,$place_id,$dateDebut,$dateFin){
+    public static function estGarable($vehiculeId,$place_id,$siteId,$dateDebut,$dateFin){
         try{
             if(vehicule::estGarable($vehiculeId, $dateDebut, $dateFin) && !place::estOccupe($place_id, $dateDebut, $dateFin)){
                 return true;
@@ -89,6 +97,29 @@ class Gare{
                'date_debut'=>$dateDebut,
                'date_fin'=>$dateFin
            ]);
+        } catch (PDOException $e) {
+            printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
+            return NULL;
+        }
+    }
+    public static function getElementsByIdUtilisateur($id){
+        try{
+          $listeVehicules=utilisateur::getVehicule($id);
+          $database=SModel::getInstance();
+          $listeReservation=array();
+          foreach  ($listeVehicules as $ele){
+             $query="select * from gare where vehicule_id=:vehicule_id and date_fin > GETDATE()";
+             $statement=$database->prepare($query);
+             $statement->execute([
+                 'vehicule_id'=>$ele.getNoPlaque(),
+             ]);
+              $listeGare=$statement->fetchAll(PDO::FETCH_CLASS,"gare");
+              foreach($listeGare as $val){
+                  $listeReservation[]=$val;
+              }
+          }
+          return $listeReservation;
+           
         } catch (PDOException $e) {
             printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
             return NULL;
