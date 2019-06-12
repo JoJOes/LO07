@@ -73,6 +73,9 @@ class ModeleUtilisateur {
 
     public static function insert($login, $nom, $prenom, $motDePasse) {
         try {
+            if (!verifierExistence($login)) {
+                Header('Location: router.php?action=inscriptionFalse');
+            }
             $database = SModel::getInstance();
             $query = "INSERT INTO utilisateur VALUES (:login, :nom, :prenom, :motDePasse)";
             $statement = $database->prepare($query);
@@ -221,8 +224,8 @@ class ModeleUtilisateur {
                 'login' => $login
             ]);
             $utilisateur = $statement->fetchAll(PDO::FETCH_CLASS, "utilisateur");
-            if (sizeof($utilisateur) > 0) {
-                return FALSE;
+            if (count($utilisateur) > 0) {
+                return FALSE; // si le login existe déjà
             }
             return TRUE;
         }

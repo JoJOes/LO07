@@ -14,11 +14,11 @@ require 'fragmentHeader.html';
             <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
         </div>
         <div class="clearfix">
-            <label class="pull-left checkbox-inline"><input type="checkbox"> Remember me</label>
-            <a href="#" class="pull-right">Oublier le mot de passe?</a>
+            <label class="pull-left checkbox-inline"><input type="checkbox">Se souvenir de moi</label>
+            <a href="#" class="pull-right">Mot de passe oublié ?</a>
         </div>
     </form>
-    <p class="text-center"><a href="router.php?action=inscription">Creer un nouveau compte</a></p>
+    <p class="text-center"><a href="router.php?action=inscription">Créer un nouveau compte</a></p>
 </div>
 <?php
 require 'fragmentFooter.html';
