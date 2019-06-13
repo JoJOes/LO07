@@ -16,12 +16,14 @@ function dateUtilisable($date1,$date2,$dateDebut, $dateFin){
 function getListeAeroports(){
     try{
         $database=SModel::getInstance();
-        $query="select nom form aeroport";
-        $statement = $database->prepare($query);
+        $query="select nom from aeroport";
+//        $statement = $database->query($query);
+        $statement=$database->prepare($query);
         $statement->execute();
         $listeAeroport=array();
-        while($ligne = mysqli_fetch_array($statement,MYSQLI_NUM)){
-            $listeAeroport[]=$ligne;
+//        $statement->setFetchMode(PDO::FETCH_ASSOC);
+        while($ligne = $statement->fetch()){
+            $listeAeroport[]=$ligne[0];
         }
        return $listeAeroport;
     } catch (PDOException $e) {
@@ -31,7 +33,20 @@ function getListeAeroports(){
 
 }
 
-function getPrixReservation($prix, $dateDebut, $dateFin) {
+//function getPrixReservation($prix, $dateDebut, $dateFin) {
+//    $dateDebutFormat = new DateTime($dateDebut, new DateTimeZone('Pacific/Nauru'));
+//    $dateFinFormat = new DateTime($dateFin, new DateTimeZone('Pacific/Nauru'));
+//
+//    $diff = $dateDebutFormat->diff($dateFinFormat);
+//    $diffHeures = $diff->h + $diff->d*24;
+//    $diffMinutes = $diff->i;
+//
+//    if ($diffMinutes > 0) {
+//        $diffHeures++;
+//    }
+//    return $diffHeures*$prix;
+//}
+function getTemps($dateDebut,$dateFin){
     $dateDebutFormat = new DateTime($dateDebut, new DateTimeZone('Pacific/Nauru'));
     $dateFinFormat = new DateTime($dateFin, new DateTimeZone('Pacific/Nauru'));
 
@@ -42,13 +57,13 @@ function getPrixReservation($prix, $dateDebut, $dateFin) {
     if ($diffMinutes > 0) {
         $diffHeures++;
     }
-    return $diffHeures*$prix;
+    return $diffHeures;
 }
-function leverErreur($message){
-    if($message!=NULL){
-        printf("<div class='text-center' style='color:red'>%s</div>",$message);
-    }
-}
+//function leverErreur($message){
+//    if($message!=NULL){
+//        printf("<div class='text-center' style='color:red'>%s</div>",$message);
+//    }
+//}
 //$today= getdate();
 ////echo strtotime($today);
 ////

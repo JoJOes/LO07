@@ -1,20 +1,20 @@
 <?php
     require_once 'Fonction.php';
    class Vehicule{
-       private $noPlaque, $marque, $modele, $transmission, $prix, $carburant;
+       private $no_plaque, $marque, $modele, $transmission, $prix, $carburant;
        
        public function __contruct($noPlaque = null, $marque=null, $modele=null,$transmission=null,$prix=null,$carburant=null){
-           if(!is_null($noPlaque)){
-              $this->noPlaque=$noPlaque;
+//           if(!is_null($noPlaque)){
+              $this->no_plaque=$noPlaque;
               $this->marque=$marque;
               $this->modele=$modele;
               $this->transmission=$transmission;
               $this->prix=$prix;
               $this->carburant=$carburant;    
-           }
+//           }
        }
        function setNoPlaque($noPlaque) {
-           $this->noPlaque = $noPlaque;
+           $this->no_plaque = $noPlaque;
        }
        function setMarque($marque) {
            $this->marque = $marque;
@@ -32,7 +32,7 @@
            $this->carburant = $carburant;
        }
        function getNoPlaque() {
-           $this->noPlaque;
+           return $this->no_plaque;
        }
        function getMarque() {
            return $this->marque;
@@ -71,21 +71,20 @@
             return NULL;
            }
        }
-      public static function estGarable($noMarque,$dateDebut,$dateFin){
+      public static function estGarable($no_plaque,$dateDebut,$dateFin){
           try{
+             require_once './modele/gare.php';
             $database = SModel::getInstance();
-            $query = "select * from gare where vehicule_id = :noMarque)";
+            $query = "select * from gare where vehicule_id = :noMarque and date_fin>:dateDebut and date_debut<:dateFin";
             $statement = $database->prepare($query);
-            $statement->execute(['no_Marque'=>$noMarque]);
-            $listeVehicule=$statement->fetchAll(PDO::FETCH_CLASS,"vehicule");
-            $occupe=false;
-            foreach($listeVehicule as $vehicule){
-                if(!dateUtilisable($dateDebut, $dateFin, $gare->getDateDebut(), $gare->getDateFin())){
-                    $occupe=true;
-                    break;
-                }
+            $statement->execute(['noMarque'=>$no_plaque,'dateDebut'=>$dateDebut,'dateFin'=>$dateFin]);
+            $listeGare=$statement->fetchAll(PDO::FETCH_CLASS,"gare");
+            if(sizeof($listeGare)==0){
+                return true;
             }
-            return $occupe;
+            else{
+                return FALSE;
+            }
           } catch (PDOException $e) {
             printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
             return NULL;
@@ -117,12 +116,15 @@
             return NULL;
           }
       }
-      public static function getVehiculeById($noMarque){
+      public static function getVehiculeById($noPlaque){
           $database = SModel::getInstance();
-          $query = "select * from vehicule where no_marque = :noMarque)";
+          $query = "select * from vehicule where no_plaque = :noPlaque";
           $statement = $database->prepare($query);
-          $statement->execute(['noMarque'=>$noMarque]);
+          $statement->execute(['noPlaque'=>$noPlaque]);
           $vehicule=$statement->fetchAll(PDO::FETCH_CLASS,"vehicule");
+          if(sizeof($vehicule)==0){
+              return NULL;
+          }
           return $vehicule[0];
       }
    }

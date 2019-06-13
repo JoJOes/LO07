@@ -145,7 +145,7 @@ class Gare{
                 'vehicule_id'=>$ele.getNoPlaque(),
             ]);
             $compteur=1;
-            while($ligne = mysqli_fetch_array($statement,MYSQLI_NUM)){
+            while($ligne = $statement->fetch()){
               echo'<tr>';
               printf("<td>%d</td>",$compteur);
               printf("<td>%s</td><td>%d</td><td>%s</td><td>%s</td><td>%s</td><td>%f</td>",$ligne[0],$ligne[1],$ligne[2],$ligne[3],$ligne[4],$ligne[5]);

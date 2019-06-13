@@ -1,11 +1,11 @@
 <?php
 
 class place {
-    private $id, $site;
+    private $id, $site_id;
     public function __contruct($id=null, $site=null){
         if(!is_null($id)){
             $this->id=$id;
-            $this->site=$site;
+            $this->site_id=$site;
         }
     }
     function setId($id) {
@@ -13,14 +13,14 @@ class place {
     }
 
     function setSite($site) {
-        $this->site = $site;
+        $this->site_id = $site;
     }
      function getId() {
         return $this->id;
     }
 
     function getSite() {
-        return $this->site;
+        return $this->site_id;
     }
     public function toString(){
         printf("<tr><td>%d</td><td>%s</td></tr>", 
@@ -40,34 +40,33 @@ class place {
     }
     public static function estOccupe($id,$siteId,$dateDebut,$dateFin){
         try{
+            require_once'./modele/gare.php';
             $database = SModel::getInstance();
-            $query = "select * from gare where place_id = :id and site_id=:siteId )";
+            $query = "select * from gare where place_id = :place_id and site_id=:siteId and date_fin>:dateDebut and date_debut<:dateFin ";
             $statement = $database->prepare($query);
-            $statement->execute(['place_id'=>$id,'siteId'=>$siteId]);
+            $statement->execute(['place_id'=>$id,'siteId'=>$siteId,'dateDebut'=>$dateDebut,'dateFin'=>$dateFin]);
             $listeGare=$statement->fetchAll(PDO::FETCH_CLASS,"gare");
-            $occupe=false;
-            foreach($listeGare as $gare){
-                if(!dateUtilisable($dateDebut, $dateFin, $gare->getDateDebut(), $gare->getDateFin())){
-                    $occupe=true;
-                    break;
-                }
+            if(sizeof($listeGare)==0){
+                return false;
             }
-            return $occupe;
+            else{
+                return true;
+            }
             } catch (PDOException $e) {
             printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
             return NULL;
         }
     }
-    public static function getListePlaceDisponible($siteId){
+    public static function getListePlaceDisponible($siteId,$dateDebut,$dateFin){
         try{
             $database = SModel::getInstance();
-            $query = "select * from place where site = :siteId )";
+            $query = "select * from place where site_id = :siteId";
             $statement = $database->prepare($query);
             $statement->execute(['siteId'=>$siteId]);
             $listePlace=$statement->fetchAll(PDO::FETCH_CLASS,"place");
             $listePlaceDisponible=array();
             foreach($listePlace as $place){
-                if(!place::estOccupe($place->getId(),$place->getDateDebut(),$place->getDateFin())){
+                if(!place::estOccupe($place->getId(),$siteId,$dateDebut,$dateFin)){
                     $listePlaceDisponible[]=$place->getId();
                 }
             }

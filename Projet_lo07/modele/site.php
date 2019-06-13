@@ -1,13 +1,14 @@
 <?php
 class site {
-    private $id, $label, $aeroport,$nombrePlace,$prixJour;
-    public function __contruct($id=null,$label=null,$aeroport=null,$nombrePlace=null,$prixJour=null){
+    private $id, $label, $aeroport,$adresse,$nombre_place,$prix_jour;
+    public function __contruct($id=null,$label=null,$aeroport=null,$adresse=NULL,$nombrePlace=null,$prixJour=null){
         if(!is_null($id)){
             $this->id=$id;
             $this->label=$label;
             $this->aeroport=$aeroport;
-            $this->nombrePlace=$nombrePlace;
-            $this->prixJour=$prixJour;
+            $this->nombre_place=$nombrePlace;
+            $this->prix_jour=$prixJour;
+            $this->adresse=$adresse; 
         }
     }
     function setId($id) {
@@ -20,10 +21,10 @@ class site {
         $this->aeroport = $aeroport;
     }
     function setNombrePlace($nombrePlace) {
-        $this->nombrePlace = $nombrePlace;
+        $this->nombre_place = $nombrePlace;
     }
     function setPrixJour($prixJour){
-        $this->prixJour=$prixJour;
+        $this->prix_jour=$prixJour;
     }
     function getId() {
         return $this->id;
@@ -38,24 +39,25 @@ class site {
     }
 
     function getNombrePlace() {
-        return $this->nombrePlace;
+        return $this->nombre_place;
     }
      function getPrixJour() {
-        return $this->prixJour;
-    }
+        return $this->prix_jour;
+    }   
     public function toString(){
         printf("<tr><td>%d</td><td>%s</td><td>%s</td><td>%d</td><td>%f</td></tr>", 
         $this->getId(), $this->getLabel(), $this->getAeroport(), $this->getNombrePlace(), $this->getPrixJour());
     }
-    public static function ajouterSite($id, $label, $aeroport,$nombrePlace,$prixJour){
+    public static function ajouterSite($id, $label, $aeroport,$adresse,$nombrePlace,$prixJour){
         try{
             $database = SModel::getInstance();
-            $query = "insert into site values (:id, :label, :aeroport, :nombrePlace, :prixJour)";
+            $query = "insert into site values (:id, :label, :aeroport,:adresse, :nombrePlace, :prixJour)";
             $statement = $database->prepare($query);
             $statement->execute([
                 'id' => $id,
                 'label' => $label,
                 'aeroport' => $aeroport,
+                'adresse'=>$adresse,
                 'nombrePlace' => $nombrePlace,
                 'prixJour'=>$prixJour
             ]);
@@ -68,18 +70,19 @@ class site {
     //calculer le nombre de places disponible des sites correspondant a l'aeroport choisit
     public static function mettreAJourNombrePlace($id,$dateDebut,$dateFin){
         try{
+            require_once './modele/place.php';
             $database = SModel::getInstance();
-            $query = "select * from place where site = :id ";
+            $query = "select * from place where site_id = :id ";
             $statement = $database->prepare($query);
             $statement->execute(['id'=>$id]);
             $listePlace = $statement->fetchAll(PDO::FETCH_CLASS, "place");
             $compteur=0;
             foreach ($listePlace as $place){
-                if(!place::estOccuppe($place->getId(),$dateDebut,$dateFin)){
+                if(!place::estOccupe($place->getId(),$id,$dateDebut,$dateFin)){
                     $compteur++;
                 }
             }
-            $requet="UPDATE Site SET nombre_place = :compteur where id= :id";
+            $requet="UPDATE site SET nombre_place = :compteur where id= :id";
             $statement2 = $database->prepare($requet);
             $statement2->execute(['compteur'=>$compteur,'id'=>$id]);
             return true;
@@ -92,7 +95,7 @@ class site {
     public static function getListeSite($aeroport){
         try {
             $database = SModel::getInstance();
-            $query = "select * from Site where aeroport= :aeroport ";
+            $query = "select * from site where aeroport= :aeroport ";
             $statement = $database->prepare($query);
             $statement->execute(['aeroport'=>$aeroport]);
             $liste_Site=$statement->fetchAll(PDO::FETCH_CLASS, "site");
@@ -102,6 +105,16 @@ class site {
             return NULL;
         }
     }
-    
+    public static function getSiteById($id){
+          $database = SModel::getInstance();
+          $query = "select * from site where id = :id";
+          $statement = $database->prepare($query);
+          $statement->execute(['id'=>$id]);
+          $site=$statement->fetchAll(PDO::FETCH_CLASS,"site");
+          if(sizeof($site)==0){
+              return NULL;
+          }
+          return $site[0];
+      }
     
 }

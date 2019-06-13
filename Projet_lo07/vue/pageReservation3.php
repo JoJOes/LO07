@@ -2,24 +2,25 @@
 require 'fragmentHeader.html';
 require 'MenuUtilisateur.html';
 //require'../modele/vehicule.php';
-//require '../modele/place.php';
-require '../Fonction.php';
-leverErreur($message);
+require_once './modele/place.php';
+//require './Fonction.php';
+//leverErreur($message);
 ?>
 <div class='container'>
     <div class="row">
         <div class='page-reservation'>
             <div class='tete-reservation'><h1>Choissiez une place à réserver</h1></div>
-            <div class='parking-reservation'><img src='images.jpg' width="40px" height="40px"><h3>Parking</h3></div>
-            <form method="get" action="router.php?action=validerReservation">
-                <input type='hidden' name='action' value='choisirplace'>
+            <div class='parking-reservation'><img src='./vue/images.jpg' width="40px" height="40px"><h3>Parking</h3></div>
+            <form method="get" action="router.php">
+                <input type='hidden' name='action' value='validerReservation'>
                 <div class='form-group'>
                     <div class="col-md-1"></div>
                     <div class="col-md-2">
                         <label for='list-sites2'>Site</label>
                         <select id='list-sites2' class='form-control' disabled="disabled">.
                             <?php
-                                printf("<option>".$_GET['list-sites']."</option>");
+                                printf("<option>".$site->getLabel()."</option>");
+                                printf("<input type='hidden' name='site_id' value='%s'>",$site->getId());
                             ?>
                         </select>
                     </div>
@@ -29,7 +30,7 @@ leverErreur($message);
                              <option></option>
                             <?php
                             foreach ($listePlaces as $ele){
-                                printf("<option>".$ele.getId()."</option>");
+                                printf("<option value='%d'>".$ele."</option>",$ele);
                             }
                             ?>
                         </select>
@@ -37,22 +38,26 @@ leverErreur($message);
                      <div class='col-md-4'>
                         <label for='list-vehicules2'>Vehicule</label>
                         <select id='list-vehicules2' class='form-control' disabled='disabled'>
-                            //<?php
-//                                printf("<option>".$_GET('list-vehicule')."</option>");
-//                            ?>
+                            <?php
+//                                printf("<option>".$_GET('list-vehicules')."</option>");
+                                printf("<option>".$_GET['list-vehicules']."</option>");
+                                printf("<input type='hidden' name='vehicule_id' value='%s'>",$_GET['list-vehicules']);
+                            ?>
                         </select>
                     </div>
                     <div class='col-md-2'>
                         <label for='date1' >Date de début</label>
-                        //<?php
-//                        printf("<input class='form-control' type='text' name='datedebut' value='%s' disabled='disabled'>",$_GET['datedebut']);
-//                        ?>
+                        <?php
+                        printf("<input class='form-control' type='text' value='%s' disabled='disabled'>",$_GET['datedebut']);
+                        printf("<input type='hidden' name='datedebut' value='%s'>",$_GET['datedebut']);
+                        ?>
                     </div>
                     <div class='col-md-2'>
                         <label for='date2'>Date de fin</label>
-                        //<?php
-//                        printf("<input class='form-control' type='text' name='datefin' value='%s' disabled='disabled'>",$_GET['datefin']);
-//                        ?>
+                        <?php
+                        printf("<input class='form-control' type='text' value='%s' disabled='disabled'>",$_GET['datefin']);
+                        printf("<input type='hidden' name='datedebut' value='%s'>",$_GET['datefin']);
+                        ?>
                     </div>
 
                 </div>
@@ -62,13 +67,13 @@ leverErreur($message);
                     <tr>
                         <td>Temps total:</td>
                         <?php
-                        //calculer le temnp
+                        printf("<td>%d</td>",$tempsTotal);
                         ?>
                     </tr>
                     <tr>
                         <td>Prix total:</td>
                         <?php
-                        //calculer le prix
+                        printf("<td>%.2f euro</td>",$tempsTotal*$prix);
                         ?>
                     </tr>
                 </table>

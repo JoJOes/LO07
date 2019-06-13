@@ -1,10 +1,12 @@
 <?php
 
 require_once 'modele/SModel.php';
-require_once 'modele/session.php';
+require_once 'modele/vehicule.php';
 
-class ModeleUtilisateur {
-    private $id, $login, $nom, $prenom, $motDePasse, $admin;
+//require_once 'modele/session.php';
+
+class utilisateur {
+    private $id, $login, $nom, $prenom, $mot_de_passe, $admin;
 
     public function __construct($id = NULL, $login = NULL, $nom = NULL, $prenom = NULL, $motDePasse = NULL, $admin = 0) {
         // valeurs nulles si pas de passage de parametres
@@ -13,7 +15,7 @@ class ModeleUtilisateur {
             $this->login = $login;
             $this->nom = $nom;
             $this->prenom = $prenom;
-            $this->motDePasse = $motDePasse;
+            $this->mot_de_passe = $motDePasse;
             $this->admin = $admin;
         }
     }
@@ -35,7 +37,7 @@ class ModeleUtilisateur {
     }
 
     function setMotDePasse($motDePasse) {
-        $this->motDePasse = $motDePasse;
+        $this->mot_de_passe = $motDePasse;
     }
 
     function setAdmin($admin) {
@@ -59,7 +61,7 @@ class ModeleUtilisateur {
     }
 
     function getMotDePasse() {
-        return $this->motDePasse;
+        return $this->mot_de_passe;
     }
 
     function getAdmin() {
@@ -73,11 +75,8 @@ class ModeleUtilisateur {
 
     public static function insert($login, $nom, $prenom, $motDePasse) {
         try {
-            if (!verifierInscription($login, $nom, $prenom, $motDePasse)) {
-                return FALSE;
-            }
             $database = SModel::getInstance();
-            $query = "INSERT INTO utilisateur VALUES (:login, :nom, :prenom, :motDePasse)";
+            $query = "INSERT INTO utilisateur(nom,prenom,login,mot_de_passe) VALUES ( :nom, :prenom,:login, :motDePasse)";
             $statement = $database->prepare($query);
             $statement->execute([
                 'login' => $login,
@@ -109,16 +108,15 @@ class ModeleUtilisateur {
     public static function getVehicules($id){
         try{
             $database = SModel::getInstance();
-            $query = "select * from possession where utilisateur_id=:id";
+            $query = "select vehicule_id from possession where utilisateur_id=:id";
             $statement = $database->prepare($query);
             $statement->execute([
                 'id' => $id
             ]);
-            $possession=$statement->fetchAll(PDO::FETCH_CLASS,"possession");
+//            $possession=$statement->fetchAll(PDO::FETCH_CLASS,"possession");
             $vehicules=array();
-            foreach($possession as $ele){
-                $vehicules[]=Vehicule::getVehiculeById($ele->getVehiculeId());
-
+            while($ligne=$statement->fetch()){
+                $vehicules[]=Vehicule::getVehiculeById($ligne['vehicule_id']);
             }
             return $vehicules;
         } catch (PDOException $e) {
@@ -167,7 +165,7 @@ class ModeleUtilisateur {
             if($statement==null){
                 Vehicule::insert($noPlaque, $marque, $modele, $transmission, $prix, $carburant);
             }
-            $requet="insert into table possession values (:utilisateur_id,:vehicule_id)";
+            $requet="insert into possession values (:utilisateur_id,:vehicule_id)";
             $statement2 = $database->prepare($requet);
             $statement2->execute([
                 'utilisateur_id' => $id,
@@ -206,9 +204,8 @@ class ModeleUtilisateur {
             if(sizeof($utilisateur)==0){
                 return FALSE;
             }
-
             session_start();
-            $_SESSION['id']=$utilisateur[0].getId();
+            $_SESSION['id']=$utilisateur[0]->getId();
             return TRUE;
         } catch (PDOException $e) {
             printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());

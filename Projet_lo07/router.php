@@ -17,6 +17,10 @@ switch ($action) {
     case "validerLogin":
 //    case "loginFalse":
     case "validerInscription":
+    case "reservation1":
+    case "reservation2":
+    case "reservation3":
+    case "validerReservation":
     break;
 
     default:
