@@ -5,52 +5,52 @@ require_once 'modele/place.php';
 require_once 'modele/SModel.php';
 require_once 'Fonction.php';
 class Gare{
-    private  $vehiculeId,$placeId,$siteId,$dateDebut,$dateFin,$prix;
+    private  $vehicule_id,$place_id,$site_id,$date_debut,$date_fin,$prix;
     public function __contruct($vehiculeId, $placeId,$siteId,$dateDebut, $dateFin,$prix){
         if(!is_null($vehiculeId)){
-            $this->placeId=$placeId;
-            $this->vehiculeId=$vehiculeId;
-            $this->dateDebut=$dateDebut;
-            $this->dateFin=$dateFin;
-            $this->siteId=$siteId;
+            $this->place_id=$placeId;
+            $this->vehicule_id=$vehiculeId;
+            $this->date_debut=$dateDebut;
+            $this->date_fin=$dateFin;
+            $this->site_id=$siteId;
             $this->prix=$prix;
 
         }
     }
     function setPlaceId($placeId) {
-        $this->placeId = $placeId;
+        $this->place_id = $placeId;
     }
     function setSiteId($siteId){
-        $this->siteId=$siteId;
+        $this->site_id=$siteId;
     }
     function setVehiculeId($vehiculeId) {
-        $this->vehiculeId = $vehiculeId;
+        $this->vehicule_id = $vehiculeId;
     }
     function setDateDebut($dateDebut) {
-        $this->dateDebut = $dateDebut;
+        $this->date_debut = $dateDebut;
     }
     function setDateFin($dateFin) {
-        $this->dateFin = $dateFin;
+        $this->date_fin = $dateFin;
     }
     function setPrix($prix) {
         $this->prix = $prix;
     }
     function getPlaceId() {
-        return $this->placeId;
+        return $this->place_id;
     }
     function getSiteId(){
-        return $this->siteId;
+        return $this->site_id;
     }
     function getVehiculeId() {
-        return $this->vehiculeId;
+        return $this->vehicule_id;
     }
 
     function getDateDebut() {
-        return $this->dateDebut;
+        return $this->date_debut;
     }
 
     function getDateFin() {
-        return $this->dateFin;
+        return $this->date_fin;
     }
     function getPrix(){
         return $this->prix;
@@ -74,22 +74,19 @@ class Gare{
     //pour ajouter la voiture dans la liste Gare
     public static function reserverPlace($vehicule_id,$place_id,$site_id,$date_debut,$date_fin,$prix){
         try{
-           if(gare::estGarable($vehiculeId,$place_id,$dateDebut,$dateFin)){
-                $database=SModel::getInstance();
-                $query="insert into table gare values (:vehicule_id,:place_id ,:site:id,:date_debut,:date_fin,:prix)";
-                $statement=$database->prepare($query);
-                $statement->execute([
-                    'vehicule_id'=>$vehicule_id,
-                    'place_id'=>$place_id,
-                    'site_id'=>$site_id,
-                    'date_debut'=>$date_debut,
-                    'date_fin'=>$date_fin,
-                    'prix'=>$prix
-                ]);
-           }
-           else {
-               return false;
-           }
+//           if(gare::estGarable($vehiculeId,$place_id,$dateDebut,$dateFin)){
+            $database=SModel::getInstance();
+            $query="insert into gare values (:vehicule_id,:place_id ,:site_id,:date_debut,:date_fin,:prix)";
+            $statement=$database->prepare($query);
+            $statement->execute([
+                'vehicule_id'=>$vehicule_id,
+                'place_id'=>$place_id,
+                'site_id'=>$site_id,
+                'date_debut'=>$date_debut,
+                'date_fin'=>$date_fin,
+                'prix'=>$prix
+            ]);
+          return true;
         } catch (PDOException $e) {
             printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
             return NULL;
@@ -135,29 +132,38 @@ class Gare{
         }
     }
     public static function afficherReservation($id){
-        try{
-          $listeVehicules=utilisateur::getVehicule($id);
+        try{            
+//          require_once './modele/vehicule.php';
+          $listeVehicules=utilisateur::getVehicules($id);
           $database=SModel::getInstance();
+//          $now= getdate();
+          $format = "%H:%M:%S %d-%B-%Y";
+//          $newdate = date($format, $now);
+            $timestamp = time();
+             $strTime = strftime($format, $timestamp );
+          
+//            $strTime = strftime($format, $now );
           foreach  ($listeVehicules as $ele){
-            $query="select G.vehicule_id G.place_id S.label G.date_debut G.date_fin G.prix from gare as G, site as S where G.vehicule_id=:vehicule_id and G.site_id=S.id and date_fin > GETDATE()";
+            $query="select G.vehicule_id, G.place_id, S.label, G.date_debut, G.date_fin, G.prix from gare as G, site as S where G.vehicule_id=:vehicule_id and G.site_id=S.id and date_fin > :date";
             $statement=$database->prepare($query);
             $statement->execute([
-                'vehicule_id'=>$ele.getNoPlaque(),
+                'vehicule_id'=>$ele->getNoPlaque(),
+                'date'=>$strTime
             ]);
             $compteur=1;
             while($ligne = $statement->fetch()){
               echo'<tr>';
               printf("<td>%d</td>",$compteur);
-              printf("<td>%s</td><td>%d</td><td>%s</td><td>%s</td><td>%s</td><td>%f</td>",$ligne[0],$ligne[1],$ligne[2],$ligne[3],$ligne[4],$ligne[5]);
+              printf("<td>%s</td><td>%d</td><td>%s</td><td>%s</td><td>%s</td><td>%.2f</td>",$ligne[0],$ligne[1],$ligne[2],$ligne[3],$ligne[4],$ligne[5]);
               echo '<td>';
               echo "<form action='router.php?action=supprimer' method='post'>";
               printf("<input type='hidden' name='vehiculeId' valu   e='%s'>",$ligne[0]);
               printf("<input type='hidden' name='placeId' value='%d'>",$ligne[1]);
               printf("<input type='hidden' name='Label' value='%s'>",$ligne[2]);
               printf("<input type='hidden' name='dateDebut' value='%s'>",$ligne[3]);
-              printf("<input type='hidden' name='dateFin' vallue='%s'>,$ligne[4]");
-              printf("<input type='hidden' name='prix' vallue='%f'>,$ligne[5]");
-              echo"<input type='submit' value='supprimer'>";
+              printf("<input type='hidden' name='dateFin' value='%s'>",$ligne[4]);
+              printf("<input type='hidden' name='prix' value='%.2f'>",$ligne[5]);
+              echo"<input class='btn btn-danger' type='submit' value='supprimer'>";
               echo'</form>';
               echo'</td>';
               echo'</tr>';

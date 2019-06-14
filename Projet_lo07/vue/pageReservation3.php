@@ -26,7 +26,7 @@ require_once './modele/place.php';
                     </div>
                     <div class="col-md-1">
                         <label for='list-places'>Place</label>
-                        <select id='list-places' class='form-control'>.
+                        <select id='list-places' name='list-places' class='form-control'>.
                              <option></option>
                             <?php
                             foreach ($listePlaces as $ele){
@@ -56,7 +56,7 @@ require_once './modele/place.php';
                         <label for='date2'>Date de fin</label>
                         <?php
                         printf("<input class='form-control' type='text' value='%s' disabled='disabled'>",$_GET['datefin']);
-                        printf("<input type='hidden' name='datedebut' value='%s'>",$_GET['datefin']);
+                        printf("<input type='hidden' name='datefin' value='%s'>",$_GET['datefin']);
                         ?>
                     </div>
 
@@ -74,19 +74,28 @@ require_once './modele/place.php';
                         <td>Prix total:</td>
                         <?php
                         printf("<td>%.2f euro</td>",$tempsTotal*$prix);
+                        printf("<input type='hidden' name='prix' value='%.2f'>",$tempsTotal*$prix);
                         ?>
                     </tr>
                 </table>
                 <hr>
-                <input class='btn btn-default' type='submit' value='Valider la reservation'>
-
+                <input class='btn btn-default' type='button' onclick="verifier()" value='Valider la reservation'>
 
 
             </form>
         </div>
     </div>
 </div>
-
+<script>
+//    $('button').onclick(verifier);
+    function verifier(){
+        if($('#list-places').val()==''){
+            alert('FORMULAIRE INCOMPLET!')
+        }else{
+            $('form').submit();
+        }
+    }
+</script>
 
 
 

@@ -21,6 +21,10 @@ switch ($action) {
     case "reservation2":
     case "reservation3":
     case "validerReservation":
+    case "voirProfil":
+    case "voirReservation":
+    case "voirVehicule":
+    case "deconnecter":
     break;
 
     default:

@@ -62,14 +62,22 @@ require 'MenuUtilisateur.html';
                 </div>
 
                 
-                <input class='btn btn-default' type='submit' value='Continuer'>
+                <input class='btn btn-default' type='button' name='' onclick='verifier()' value='Continuer'>
                 <div class="clearfix"></div>
-
-
             </form>
         </div>
     </div>
 </div>
+<script>
+//    $('button').onclick(verifier);
+    function verifier(){
+        if($('#list-sites').val()==''||$('#list-vehicules').val()==''){
+            alert('FORMULAIRE INCOMPLET!')
+        }else{
+            $('form').submit();
+        }
+    }
+</script>
 
 
 

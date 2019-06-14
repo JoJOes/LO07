@@ -8,7 +8,7 @@ require_once 'modele/vehicule.php';
 class utilisateur {
     private $id, $login, $nom, $prenom, $mot_de_passe, $admin;
 
-    public function __construct($id = NULL, $login = NULL, $nom = NULL, $prenom = NULL, $motDePasse = NULL, $admin = 0) {
+    public function __construct($id = NULL,  $nom = NULL, $prenom = NULL,$login = NULL, $motDePasse = NULL, $admin = NULL) {
         // valeurs nulles si pas de passage de parametres
         if (!is_null($id)) {
             $this->id = $id;

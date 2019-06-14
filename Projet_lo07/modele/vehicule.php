@@ -50,8 +50,8 @@
            return $this->carburant;
        }
        public function toString(){
-           printf("<td>%s</td><td>%s</td><td>%s</td><td>%d</td><td>%f</td>", 
-           $this->getNoPlaque(), $this->getMarque(), $this->getModele(),$this->transmission, $this->getPrix());
+           printf("<td>%s</td><td>%s</td><td>%s</td><td>%d</td><td>%.2f</td>", 
+           $this->getNoPlaque(), $this->getMarque(), $this->getModele(),$this->getTranmission(), $this->getPrix());
        }
        public static function insert($noPlaque,$marque,$modele,$transmission,$prix,$carburant){
            try{

@@ -68,23 +68,26 @@ class site {
         }
     }
     //calculer le nombre de places disponible des sites correspondant a l'aeroport choisit
-    public static function mettreAJourNombrePlace($id,$dateDebut,$dateFin){
+    public static function mettreAJourNombrePlace($aeroport,$dateDebut,$dateFin){
         try{
             require_once './modele/place.php';
+            $listeSite=site::getListeSite($aeroport);
             $database = SModel::getInstance();
-            $query = "select * from place where site_id = :id ";
-            $statement = $database->prepare($query);
-            $statement->execute(['id'=>$id]);
-            $listePlace = $statement->fetchAll(PDO::FETCH_CLASS, "place");
-            $compteur=0;
-            foreach ($listePlace as $place){
-                if(!place::estOccupe($place->getId(),$id,$dateDebut,$dateFin)){
-                    $compteur++;
+            foreach($listeSite as $ele){
+                $query = "select * from place where site_id = :id ";
+                $statement = $database->prepare($query);
+                $statement->execute(['id'=>$ele->getId()]);
+                $listePlace = $statement->fetchAll(PDO::FETCH_CLASS, "place");
+                $compteur=0;
+                foreach ($listePlace as $place){
+                    if(place::estOccupe($place->getId(),$ele->getId(),$dateDebut,$dateFin)!=true){
+                        $compteur=$compteur+1;
+                    }
                 }
+                $requet="UPDATE site SET nombre_place = :compteur where id= :id";
+                $statement2 = $database->prepare($requet);
+                $statement2->execute(['compteur'=>$compteur,'id'=>$ele->getId()]);
             }
-            $requet="UPDATE site SET nombre_place = :compteur where id= :id";
-            $statement2 = $database->prepare($requet);
-            $statement2->execute(['compteur'=>$compteur,'id'=>$id]);
             return true;
         } catch (PDOException $e) {
             printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());

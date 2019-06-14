@@ -66,7 +66,7 @@ class place {
             $listePlace=$statement->fetchAll(PDO::FETCH_CLASS,"place");
             $listePlaceDisponible=array();
             foreach($listePlace as $place){
-                if(!place::estOccupe($place->getId(),$siteId,$dateDebut,$dateFin)){
+                if(place::estOccupe($place->getId(),$siteId,$dateDebut,$dateFin)==false){
                     $listePlaceDisponible[]=$place->getId();
                 }
             }

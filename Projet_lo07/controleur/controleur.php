@@ -68,28 +68,12 @@ class controleur {
         if(!isset($_SESSION['id'])){
             require './vue/login.php';
         }
-//        else if(($_GET['list-aeroport']=='')||!isset($_GET['date1'])||!isset($_GET['date2'])){
-         else if(($_GET['list-aeroport']=='')||($_GET['date1']=='')||($_GET['date2']=='')){
-            $message="<script>alert('FORMULAIRE INCOMPLET');</script>";
-            echo $message;
-            require 'Fonction.php';
-            $listeAeroports= getListeAeroports();
-            require './vue/pageReservation1.php';
-            require './vue/pageReservation1.php';
-        }
         else{
             require './modele/site.php';
             require './modele/utilisateur.php';
+            site::mettreAJourNombrePlace($_GET['list-aeroport'],$_GET['date1'],$_GET['date2']);
             $listeSites=site::getListeSite($_GET['list-aeroport']);
             $listeVehicules= utilisateur::getVehicules($_SESSION['id']);
-            foreach ($listeSites as $ele){
-                site::mettreAJourNombrePlace($ele->getId(), strtotime($_GET['date1']), strtotime($_GET['date2']));
-            }
-//            foreach($listeSites as $val){
-//                echo '<table>';
-//                $val->toString();
-//                echo'</table>';
-//            }
             $date1=$_GET['date1'];
             $date2=$_GET['date2'];
             require './vue/pageReservation2.php';
@@ -97,80 +81,140 @@ class controleur {
     }
     public static function reservation3(){
         session_start();
-        require './modele/vehicule.php';
-        require'./modele/site.php';
-//        echo $_GET['datedebut'];
-        if($_GET['list-sites']==''||$_GET['list-vehicules']==''){
-            $message="<script>alert('FORMULAIRE INCOMPLET');</script>";
-            echo $message;
-            $date1=$_GET['datedebut'];
-            $date2=$_GET['datefin'];
-            require './modele/utilisateur.php';
-            $listeSites=site::getListeSite($_GET['list-aeroport']);
-            $listeVehicules= utilisateur::getVehicules($_SESSION['id']);
-            foreach ($listeSites as $ele){
-                site::mettreAJourNombrePlace($ele->getId(), strtotime($date1), strtotime($_GET['date2']));
-            }
-            require './vue/pageReservation2.php';
-        }
-        else if(!vehicule::estGarable($_GET['list-vehicules'], strtotime($_GET['datedebut']), strtotime($_GET['datefin']))){
-            $message="<script>alert('LA VOITURE EST DEJA GAREE');</script>";
-            echo $message;
-            $date1=$_GET['datedebut'];
-            $date2=$_GET['datefin'];
-            require './modele/utilisateur.php';
-            $listeSites=site::getListeSite($_GET['list-aeroport']);
-            $listeVehicules= utilisateur::getVehicules($_SESSION['id']);
-            foreach ($listeSites as $ele){
-                site::mettreAJourNombrePlace($ele->getId(), strtotime($_GET['date1']), strtotime($_GET['date2']));
-            }
-            require './vue/pageReservation2.php';
-        }
-        else if(site::getSiteById($_GET['list-sites'])->getNombrePlace()==0){
-            $message="<script>alert('accune place disponible dans cette site');</script>";
-            echo $message;
+        if(!isset($_SESSION['id'])){
+            require './vue/login.php';
         }
         else{
-//            echo $_GET['list-vehicules'];
-        require_once'./modele/place.php';
-        $listePlaces=place::getListePlaceDisponible($_GET['list-sites'],strtotime($_GET['datedebut']), strtotime($_GET['datefin']));
-//                $listePlaces=place::getListePlaceDisponible($_GET['list-sites'],$_GET['datedebut'], $_GET['datefin']);
-        $tempsTotal= getTemps($_GET['datedebut'],$_GET['datefin']);
-        $site=site::getSiteById($_GET['list-sites']);
-        $prix=$site->getPrixJour();
-        require './vue/pageReservation3.php';
+            require './modele/vehicule.php';
+            require'./modele/site.php';
+    //        echo $_GET['datedebut'];
+    //        if($_GET['list-sites']==''||$_GET['list-vehicules']==''){
+    //            $message="<script>alert('FORMULAIRE INCOMPLET');</script>";
+    //            echo $message;
+    //            $date1=$_GET['datedebut'];
+    //            $date2=$_GET['datefin'];
+    //            require './modele/utilisateur.php';
+    //            $listeSites=site::getListeSite($_GET['list-aeroport']);
+    //            $listeVehicules= utilisateur::getVehicules($_SESSION['id']);
+    //            foreach ($listeSites as $ele){
+    //                site::mettreAJourNombrePlace($ele->getId(), strtotime($date1), strtotime($_GET['date2']));
+    //            }
+    //            require './vue/pageReservation2.php';
+    //        }
+            if(vehicule::estGarable($_GET['list-vehicules'], $_GET['datedebut'], $_GET['datefin'])==false){
+                $message="<script>alert('LA VOITURE EST DEJA GAREE');</script>";
+                echo $message;
+                $date1=$_GET['datedebut'];
+                $date2=$_GET['datefin'];
+                require_once './modele/utilisateur.php';
+                site::mettreAJourNombrePlace($_GET['list-aeroport'], $date1, $date2);
+                $listeSites=site::getListeSite($_GET['list-aeroport']);
+    //            foreach ($listeSites as $ele){
+    //                site::mettreAJourNombrePlace($ele->getId(), strtotime($_GET['datedebut']), strtotime($_GET['datefin']));
+    //            }
+                $listeVehicules= utilisateur::getVehicules($_SESSION['id']);
+                foreach ($listeSites as $ele){
+                    site::mettreAJourNombrePlace($ele->getId(), strtotime($_GET['datedebut']), strtotime($_GET['datefin']));
+                }
+                require './vue/pageReservation2.php';
+            }
+            else if(site::getSiteById($_GET['list-sites'])->getNombrePlace()==0){
+                $message="<script>alert('accune place disponible dans cette site');</script>";
+                echo $message;
+                $date1=$_GET['datedebut'];
+                $date2=$_GET['datefin'];
+                require_once './modele/utilisateur.php';
+                site::mettreAJourNombrePlace($_GET['list-aeroport'], $date1, $date2);
+                $listeSites=site::getListeSite($_GET['list-aeroport']);
+    //            foreach ($listeSites as $ele){
+    //                site::mettreAJourNombrePlace($ele->getId(), strtotime($_GET['datedebut']), strtotime($_GET['datefin']));
+    //            }
+                $listeVehicules= utilisateur::getVehicules($_SESSION['id']);
+                foreach ($listeSites as $ele){
+                    site::mettreAJourNombrePlace($ele->getId(), strtotime($_GET['datedebut']), strtotime($_GET['datefin']));
+                }
+                require './vue/pageReservation2.php';
+            }
+            else{
+    //            echo $_GET['list-vehicules'];
+            require_once'./modele/place.php';
+            $listePlaces=place::getListePlaceDisponible($_GET['list-sites'],$_GET['datedebut'],$_GET['datefin']);
+            $tempsTotal= getTemps($_GET['datedebut'],$_GET['datefin']);
+            $site=site::getSiteById($_GET['list-sites']);
+            $prix=$site->getPrixJour();
+            require './vue/pageReservation3.php';
+            }
         }
-    }
-    public static function validerReservation(){
         
     }
-    // Affiche un vin particulier (id)
-    public static function read() {
-        require ('app/view/viewVinIDForm.php');      
+    public static function validerReservation(){
+        session_start();
+        if(isset($_SESSION['id'])==false){
+            require './vue/login.php';
+        }
+        else{
+            require_once './modele/gare.php';
+            Gare::reserverPlace($_GET['vehicule_id'], $_GET['list-places'], $_GET['site_id'], $_GET['datedebut'], $_GET['datefin'], $_GET['prix']);
+    //        Gare::reserverPlace($_GET['vehicule_id'], $_GET['list-places'], $_GET['site_id'], strtotime($_GET['datedebut']), strtotime($_GET['datefin']), $_GET['prix']);
+            $message="<script>alert('La reservation a ete reussie');</script>";
+            echo $message;
+            require './vue/accueil.php';
+        }
     }
-    
-    // Affiche un vin particulier (id)
-    public static function idFormAction() {
-        $vin_id = $_GET['id'];
-        $results = ModelVin::read($vin_id);
-        require 'app/view/viewVinList.php';
+    public static function voirProfil(){
+        session_start();
+        if(!isset($_SESSION['id'])){
+            require './vue/login.php';
+        }
+        else{
+            require './modele/utilisateur.php';;
+            $id=$_SESSION['id'];
+            $utilisateur= utilisateur::getUtilisateurById($id);
+            $listeVehicules= utilisateur::getVehicules($id);
+            require './vue/profil.php';
+            printf("<script>$('#info').click()</script>");
+        }
+        
     }
-    
-    // Affiche le formulaire de creation d'un vin
-    public static function create() {
-        require ('app/view/viewVinForm.php'); 
+    public static function voirVehicule(){
+        session_start();
+        if(!isset($_SESSION['id'])){
+            require './vue/login.php';
+        }
+        else{
+            require './modele/utilisateur.php';;
+            $id=$_SESSION['id'];
+            $utilisateur= utilisateur::getUtilisateurById($id);
+            $listeVehicules= utilisateur::getVehicules($id);
+            require './vue/profil.php';
+            printf("<script>$('#vehicule').click()</script>");
+        }
+        
     }
-
-    // Ajout des données d'un nouveau vin et affiche un message de confirmation
-    public static function created() {
-        // ajouter une validation des informations du formulaire
-        $results = ModelVin::insert ($_GET['id'], $_GET['cru'], $_GET['annee'], $_GET['degre']);
-        require 'app/view/viewVinCreated.php';
+    public static function voirReservation(){
+        session_start();
+        if(!isset($_SESSION['id'])){
+            require './vue/login.php';
+        }
+        else{
+            require './modele/utilisateur.php';;
+            $id=$_SESSION['id'];
+            $utilisateur= utilisateur::getUtilisateurById($id);
+            $listeVehicules= utilisateur::getVehicules($id);
+            require './vue/profil.php';
+            printf("<script>$('#reservation').click()</script>");
+        }
+        
     }
-   
-    // Ajout des données d'un nouveau vin et affiche un message de confirmation    
-    public static function delete() {
-        require ('app/view/viewVinIDForm.php');  
+    public static function deconnecter(){
+        session_start();
+        if(!isset($_SESSION['id'])){
+            require './vue/login.php';
+        }
+        else{
+            unset($_SESSION['id']);
+            require './vue/accueil.php';
+        }
     }
 }
 ?>

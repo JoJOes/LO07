@@ -1,35 +1,37 @@
 <?php 
 require 'fragmentHeader.html';
 require 'menuUtilisateur.html';
-require'../modele/gare.php'
+//require_once './modele/utilisateur.php';
+require'./modele/gare.php'
 ?>
-<h1><img src='espaceClient.png' style="width: 100px;height: 100px"> Espace personnelle</h1>
+<h1><img src='./vue/espaceClient.png' style="width: 100px;height: 100px"> Espace personnelle</h1>
 <div class="tab">
-    <button class="tablink" onclick="ouvrirFenetre(event,'mesinfos')">Mes informations</button>
-    <button class="tablink" onclick="ouvrirFenetre(event,'mesvehicules')">Mes Vehicules</button>
-    <button class="tablink" onclick="ouvrirFenetre(event,'mesreservation')">Mes reservations</button>
+    <button class="tablink" id='info' onclick="ouvrirFenetre(event,'mesinfos')">Mes informations</button>
+    <button class="tablink" id='vehicule' onclick="ouvrirFenetre(event,'mesvehicules')">Mes Vehicules</button>
+    <button class="tablink" id='reservation' onclick="ouvrirFenetre(event,'mesreservation')">Mes reservations</button>
 </div>
 
+<script>$('#info').click()</script>
 <div id="mesinfos"class="tabcontent" >
    
     <table class='table table-bordered' style='border-color: #4d4d4d;width: 200px'>
-                <tr><th colspan="2">Mes informations</th></tr>
+                <tr><th class='text-center' colspan="2">Mes informations</th></tr>
                 <tr>
-                    <td>Nom</td>
+                    <th>Nom</th>
                      <?php
-                        printf("<td>".$utilisateur->getNom()."</td>");
+                        printf("<td>%s</td>",$utilisateur->getNom());
                      ?>
                 </tr>
                 <tr>
-                    <td>Prenom</td>
+                    <th>Prenom</th>
                      <?php
-                        printf("<td>".$utilisateur->getPrenom()."</td>");
+                        printf("<td>%s</td>",$utilisateur->getPrenom());
                      ?>
                 </tr>
                 <tr>
-                    <td>admin</td>
+                    <th>Admin</th>
                      <?php
-                        if($utilisateur->getAmin()==0){
+                        if($utilisateur->getAdmin()==0){
                             printf("<td>non</td>");
                         }
                         else{
@@ -46,18 +48,22 @@ require'../modele/gare.php'
 </div>
 <div class="tabcontent" id="mesvehicules">
     <table class="table table-bordered">
-        <tr><th colspan="5">Vos vehicules</th></tr>
+        <tr><th class='text-center' colspan="5">Vos vehicules</th></tr>
 
         <tr>
-            <td>Nummero de plaque</td>
-            <td>Marque</td>
-            <td>Modele</td>
-            <td>Transmission</td>
-            <td>prix</td>
+            <th>Nummero de plaque</th>
+            <th>Marque</th>
+            <th>Modele</th>
+            <th>Transmission</th>
+            <th>Prix par heure</th>
         </tr>
-        <tr>
-            <?php $vehicules->toString()?>
-        </tr>
+            <?php 
+                foreach ($listeVehicules as $ele){
+                    echo'<tr>';
+                    $ele->toString();
+                    echo'</tr>';
+                }
+            ?>
     </table>
     <form action='router.php' method="get">
             <input type='hidden' id='action' value="modifierVehicules">
@@ -66,8 +72,8 @@ require'../modele/gare.php'
 </div>
 <div class="tabcontent" id="mesreservation">
     <div class="row">
-        <div class="col-md-8">
-            <table title="Les places reservees">
+        <div class  ="col-md-12">
+            <table class='table table-bordered' title="Les places reservees">
                 <tr>
                     <th>Numéro</th>
                     <th>Numéro de plaque du véhicule</th>
@@ -76,6 +82,7 @@ require'../modele/gare.php'
                     <th>Date de début</th>
                     <th>Date de fin</th>
                     <th>Prix</th>
+                    <th></th>
                 </tr>
                 <?php
                     Gare::afficherReservation($id)
