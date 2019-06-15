@@ -1,16 +1,15 @@
 <?php
     require_once 'Fonction.php';
    class Vehicule{
-       private $no_plaque, $marque, $modele, $transmission, $prix, $carburant;
+       private $no_plaque, $marque, $modele, $transmission, $prix;
        
-       public function __contruct($noPlaque = null, $marque=null, $modele=null,$transmission=null,$prix=null,$carburant=null){
+       public function __contruct($noPlaque = null, $marque=null, $modele=null,$transmission=null,$prix=null){
 //           if(!is_null($noPlaque)){
               $this->no_plaque=$noPlaque;
               $this->marque=$marque;
               $this->modele=$modele;
               $this->transmission=$transmission;
               $this->prix=$prix;
-              $this->carburant=$carburant;    
 //           }
        }
        function setNoPlaque($noPlaque) {
@@ -28,9 +27,6 @@
        function setPrix($prix) {
            $this->prix = $prix;
        }
-       function setCarburant($carburant) {
-           $this->carburant = $carburant;
-       }
        function getNoPlaque() {
            return $this->no_plaque;
        }
@@ -46,25 +42,21 @@
        function getPrix() {
            return $this->prix;
        }
-       function getCarburant() {
-           return $this->carburant;
-       }
        public function toString(){
            printf("<td>%s</td><td>%s</td><td>%s</td><td>%d</td><td>%.2f</td>", 
            $this->getNoPlaque(), $this->getMarque(), $this->getModele(),$this->getTranmission(), $this->getPrix());
        }
-       public static function insert($noPlaque,$marque,$modele,$transmission,$prix,$carburant){
+       public static function insert($noPlaque,$marque,$modele,$transmission,$prix){
            try{
             $database=SModel::getInstance();
-            $query="insert into table vehicule values (:noPlaque,:marque,:modele,:transmission,:prix,:carburant)";
+            $query="insert into vehicule values (:noPlaque,:marque,:modele,:transmission,:prix)";
             $statement=$database->prepare($query);
-            $statemet->execute([
+            $statement->execute([
                 'noPlaque'=>$noPlaque,
                 'marque'=>$marque,
                 'modele'=>$modele,
                 'transmission'=>$transmission,
                 'prix'=>$prix,
-                'carburant'=>$carburant
             ]);
            } catch (PDOException $e) {
             printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
@@ -127,6 +119,25 @@
           }
           return $vehicule[0];
       }
+      public static function modifierVehicule($noPlaque,$marque,$modele,$transmission,$prix){
+          try{
+            $database=SModel::getInstance();
+            $query="UPDATE vehicule SET marque=:marque, modele=:modele, transmission=:transmission, prix=:prix where no_plaque=:noPlaque";
+            $statement=$database->prepare($query);
+            $statement->execute([
+                'noPlaque'=>$noPlaque,
+                'marque'=>$marque,
+                'modele'=>$modele,
+                'transmission'=>$transmission,
+                'prix'=>$prix,
+            ]);
+            return true;
+           } catch (PDOException $e) {
+            printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
+            return NULL;
+           }
+      }
+              
    }
 ?>
 

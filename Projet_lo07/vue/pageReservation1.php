@@ -33,13 +33,13 @@ $message='thu suong';
                     <div class="col-md-3">
                         <!--<div class='form-date'>-->
                             <label for='date1' >Date de début</label>
-                            <input class='form-control' type='datetime-local' id='date1' name="date1">
+                            <input class='form-control' type='datetime-local' id='date1' name="datedebut">
                         <!--</div>-->
                     </div>
                     <div class="col-md-3">
                         <!--<div class='form-date'>-->
                             <label for='date2'>Date de fin</label>
-                            <input class='form-control' type='datetime-local' id='date2' name="date2">
+                            <input class='form-control' type='datetime-local' id='date2' name="datefin">
                         <!--</div>-->
                      </div>
 

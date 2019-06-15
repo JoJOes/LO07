@@ -92,16 +92,17 @@ class Gare{
             return NULL;
         }
     }
-    public static function annulerReservation($vehiculeId,$placeId,$dateDebut,$dateFin){
+    public static function annulerReservation($vehiculeId,$placeId,$siteId,$dateDebut,$dateFin){
         try{
           $database=SModel::getInstance();
-           $query="delete from table gare where vehicule_id= :vehicule_id and place_id =:place_id and date_debut= :date_debut and date_fin=:date_fin";
+           $query="delete from gare where vehicule_id= :vehicule_id and place_id =:place_id and site_id=:siteId and date_debut= :date_debut and date_fin=:date_fin";
            $statement=$database->prepare($query);
            $statement->execute([
                'vehicule_id'=>$vehiculeId,
                'place_id'=>$placeId,
                'date_debut'=>$dateDebut,
-               'date_fin'=>$dateFin
+               'date_fin'=>$dateFin,
+               'siteId'=>$siteId
            ]);
         } catch (PDOException $e) {
             printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
@@ -139,16 +140,17 @@ class Gare{
 //          $now= getdate();
           $format = "%H:%M:%S %d-%B-%Y";
 //          $newdate = date($format, $now);
-            $timestamp = time();
-             $strTime = strftime($format, $timestamp );
-          
+            $timestamp = date("y-m-d H:M:S ");
+//             $strTime = strftime($format, $timestamp );
+             $strTime=date("y-m-d H:M:S");
+//             $strTime->format(H:M:S d-B-Y);
 //            $strTime = strftime($format, $now );
           foreach  ($listeVehicules as $ele){
-            $query="select G.vehicule_id, G.place_id, S.label, G.date_debut, G.date_fin, G.prix from gare as G, site as S where G.vehicule_id=:vehicule_id and G.site_id=S.id and date_fin > :date";
+            $query="select G.vehicule_id, G.place_id, S.label, G.date_debut, G.date_fin, G.prix, G.site_id from gare as G, site as S where G.vehicule_id=:vehicule_id and G.site_id=S.id and date_fin > :date";
             $statement=$database->prepare($query);
             $statement->execute([
                 'vehicule_id'=>$ele->getNoPlaque(),
-                'date'=>$strTime
+                'date'=>$strTime,
             ]);
             $compteur=1;
             while($ligne = $statement->fetch()){
@@ -156,17 +158,20 @@ class Gare{
               printf("<td>%d</td>",$compteur);
               printf("<td>%s</td><td>%d</td><td>%s</td><td>%s</td><td>%s</td><td>%.2f</td>",$ligne[0],$ligne[1],$ligne[2],$ligne[3],$ligne[4],$ligne[5]);
               echo '<td>';
-              echo "<form action='router.php?action=supprimer' method='post'>";
-              printf("<input type='hidden' name='vehiculeId' valu   e='%s'>",$ligne[0]);
+              $form_id='form-'.$compteur;
+              printf( "<form id='%s' action='router.php' method='get'>",$form_id);
+              printf("<input type='hidden' name='action' value='supprimerReservation'>");
+              printf("<input type='hidden' name='vehiculeId' value='%s'>",$ligne[0]);
               printf("<input type='hidden' name='placeId' value='%d'>",$ligne[1]);
-              printf("<input type='hidden' name='Label' value='%s'>",$ligne[2]);
+              printf("<input type='hidden' name='siteId' value='%s'>",$ligne[6]);
               printf("<input type='hidden' name='dateDebut' value='%s'>",$ligne[3]);
               printf("<input type='hidden' name='dateFin' value='%s'>",$ligne[4]);
               printf("<input type='hidden' name='prix' value='%.2f'>",$ligne[5]);
-              echo"<input class='btn btn-danger' type='submit' value='supprimer'>";
+              printf("<input class='btn btn-danger' type='button' onclick='supprimerReservation(\"%s\",\"%.2f\")' value='supprimer'>",$form_id,$ligne[5]);
               echo'</form>';
               echo'</td>';
               echo'</tr>';
+              $compteur=$compteur+1;
             }
               
           }

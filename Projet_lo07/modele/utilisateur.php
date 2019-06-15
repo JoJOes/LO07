@@ -127,7 +127,7 @@ class utilisateur {
     public static function modifierNomPrenom($id,$nom,$prenom){
         try{
             $database = SModel::getInstance();
-            $query = "UPDATE utilisateur SET nom=:nom and prenom=:prenom where id=:id";
+            $query = "UPDATE utilisateur SET nom=:nom, prenom=:prenom where id=:id";
             $statement = $database->prepare($query);
             $statement->execute([
                 'id' => $id,
@@ -154,16 +154,50 @@ class utilisateur {
             return FALSE;
         }
     }
-    public static function ajouterVehicule($id,$noPlaque, $marque,$modele,$transmission,$prix,$carburant){
-        try{
+    public static function possederVehicule($id,$noPlaque){
+         try{
+            require_once './modele/vehicule.php';
             $database = SModel::getInstance();
             $query = "select * from vehicule where no_plaque = :noPlaque";
             $statement = $database->prepare($query);
             $statement->execute([
-                'no_plaque'=>$noPlaque
+                'noPlaque'=>$noPlaque
             ]);
-            if($statement==null){
-                Vehicule::insert($noPlaque, $marque, $modele, $transmission, $prix, $carburant);
+            $vehicule=$statement->fetchAll(PDO::FETCH_CLASS,"vehicule");
+            if(sizeof($vehicule)!=0){
+                $query2 = "select * from possession where utilisateur_id=:id and vehicule_id=:noPlaque";
+                $statement2 = $database->prepare($query2);
+                $statement2->execute([
+                    'noPlaque'=>$noPlaque,
+                    'id'=>$id
+                ]);
+                while($ligne=$statement2->fetch()){
+                    if($ligne!=null){
+                        return 1;
+                    }
+                }
+                return 2;
+            }
+            return 3;
+            
+            
+        } catch (PDOException $e) {
+            printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
+            return 0;
+        }
+    }
+    public static function ajouterVehicule($id,$noPlaque, $marque,$modele,$transmission,$prix){
+        try{
+            require_once './modele/vehicule.php';
+            $database = SModel::getInstance();
+            $query = "select * from vehicule where no_plaque = :noPlaque";
+            $statement = $database->prepare($query);
+            $statement->execute([
+                'noPlaque'=>$noPlaque
+            ]);
+            $vehicule=$statement->fetchAll(PDO::FETCH_CLASS,"vehicule");
+            if(sizeof($vehicule)==0){
+                Vehicule::insert($noPlaque, $marque, $modele, $transmission, $prix);
             }
             $requet="insert into possession values (:utilisateur_id,:vehicule_id)";
             $statement2 = $database->prepare($requet);
@@ -183,9 +217,10 @@ class utilisateur {
             $query = "delete from possession where utilisateur_id=:id and vehicule_id=:noPlaque";
             $statement = $database->prepare($query);
             $statement->execute([
-                'vehicule_id'=>$noPlaque,
-                'utilisateur_id'=>$id
+                'noPlaque'=>$noPlaque,
+                'id'=>$id
             ]);
+            
         } catch (PDOException $e) {
             printf("%s - %s<p/>\n", $e->getCode(), $e->getMessage());
             return FALSE;

@@ -60,10 +60,8 @@ require 'MenuUtilisateur.html';
                         </div>
                     </div>
                 </div>
-
-                
-                <input class='btn btn-default' type='button' name='' onclick='verifier()' value='Continuer'>
-                <div class="clearfix"></div>
+                <input class='btn btn-default'  type='button' name='' onclick='verifier()' value='Continuer'>
+                <!--<div class="col-md-5"></div>-->
             </form>
         </div>
     </div>

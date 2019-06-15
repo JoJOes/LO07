@@ -12,10 +12,10 @@ parse_str($query_string, $param);
 $action = $param["action"];
 
 switch ($action) {
+    case "accueil":
     case "login" :
     case "inscription":
     case "validerLogin":
-//    case "loginFalse":
     case "validerInscription":
     case "reservation1":
     case "reservation2":
@@ -25,6 +25,14 @@ switch ($action) {
     case "voirReservation":
     case "voirVehicule":
     case "deconnecter":
+    case "validerModificationInformation":
+    case "validerModificationMotDePasse":
+    case "modifierVehicule":
+    case "validerModificationVehicule":
+    case "supprimerVehicule":
+    case "ajouterVehicule":
+    case "validerAjouteVehicule":
+    case "supprimerReservation":
     break;
 
     default:
