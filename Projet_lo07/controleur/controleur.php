@@ -226,13 +226,13 @@ class controleur {
         }
         else{
             require_once './modele/vehicule.php';
-            if($_GET['transmission']=='non'){
-                 $transmission=0;
-            }
-            else{
-                 $transmission=1;
-            }
-            if(Vehicule::modifierVehicule($_GET['noPlaque'], $_GET['marque'],$_GET['modele'],$transmission,$_GET['prix'])){
+//            if($_GET['transmission']=='non'){
+//                 $transmission=0;
+//            }
+//            else{
+//                 $transmission=1;
+//            }
+            if(Vehicule::modifierVehicule($_GET['noPlaque'], $_GET['marque'],$_GET['modele'],$_GET['transmission'],$_GET['prix'])){
                 $message="<script>alert('La modification a ete reussie');</script>";
                 echo $message;
             }
@@ -276,13 +276,15 @@ class controleur {
                 $message="<script>alert('Deja possede!');</script>";
                 echo $message;
             }
-            else if(utilisateur::possederVehicule($_SESSION['id'],$_GET['no-plaque'])==3){
+            else if(utilisateur::possederVehicule($_SESSION['id'],$_GET['no-plaque'])==3 && isset($_GET['creer'])==false){
                 $message="<script>alert('Vehicule existe pas!');</script>";
                 echo $message;
             }
             else {
                 if(isset($_GET['creer'])==false){
-                    utilisateur::ajouterVehicule($_SESSION['id'], $_GET['no-plaque'], null, null, null, null);
+                    
+                        utilisateur::ajouterVehicule($_SESSION['id'], $_GET['no-plaque'], null, null, null, null);
+                    
                 }
                 else if(isset($_GET['creer'])==true){
                     require_once './modele/utilisateur.php';

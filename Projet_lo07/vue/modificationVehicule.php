@@ -25,13 +25,18 @@ require 'menuUtilisateur.html';
             ?>
            <label for="transmissiontra">Transmission</label>
            <?php
+           
+           echo"<select class='form-control' name='transmission'>";
+//           printf("<input type='text' class='form-control' name='transmission' id='transmission' value='%s'>",$b);
            if($vehicule->getTranmission()==0){
-               $b='non';
+               echo"<option value='1'>oui</option>";
+               echo"<option value='0' selected='selected'>non</option>";
            }
            else{
-               $b='oui';
+               echo"<option value='1' selected='selected'>oui</option>";
+               echo"<option value='0' >non</option>";
            }
-           printf("<input type='text' class='form-control' name='transmission' id='transmission' value='%s'>",$b);
+           echo "</select>"
            ?>
            <label for="prix">Prix</label>
            <?php

@@ -145,6 +145,7 @@ class Gare{
              $strTime=date("y-m-d H:M:S");
 //             $strTime->format(H:M:S d-B-Y);
 //            $strTime = strftime($format, $now );
+          $compteur=0;
           foreach  ($listeVehicules as $ele){
             $query="select G.vehicule_id, G.place_id, S.label, G.date_debut, G.date_fin, G.prix, G.site_id from gare as G, site as S where G.vehicule_id=:vehicule_id and G.site_id=S.id and date_fin > :date";
             $statement=$database->prepare($query);
@@ -152,8 +153,8 @@ class Gare{
                 'vehicule_id'=>$ele->getNoPlaque(),
                 'date'=>$strTime,
             ]);
-            $compteur=1;
             while($ligne = $statement->fetch()){
+              $compteur++;
               echo'<tr>';
               printf("<td>%d</td>",$compteur);
               printf("<td>%s</td><td>%d</td><td>%s</td><td>%s</td><td>%s</td><td>%.2f</td>",$ligne[0],$ligne[1],$ligne[2],$ligne[3],$ligne[4],$ligne[5]);
@@ -171,7 +172,6 @@ class Gare{
               echo'</form>';
               echo'</td>';
               echo'</tr>';
-              $compteur=$compteur+1;
             }
               
           }

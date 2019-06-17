@@ -43,8 +43,12 @@
            return $this->prix;
        }
        public function toString(){
-           printf("<td>%s</td><td>%s</td><td>%s</td><td>%d</td><td>%.2f</td>", 
-           $this->getNoPlaque(), $this->getMarque(), $this->getModele(),$this->getTranmission(), $this->getPrix());
+           $a='oui';
+           if($this->getTranmission()==1){
+               $a='non';
+           }
+           printf("<td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%.2f</td>", 
+           $this->getNoPlaque(), $this->getMarque(), $this->getModele(),$a, $this->getPrix());
        }
        public static function insert($noPlaque,$marque,$modele,$transmission,$prix){
            try{

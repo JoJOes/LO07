@@ -29,7 +29,12 @@ require 'menuUtilisateur.html';
            <label for="modele2">Modèle</label>
            <input type='text' class='form-control' name='modele' id='modele2' >
            <label for="transmission2">Transmission</label>
-           <input type='text' class='form-control' name='transmission' id='transmission2'>
+           <!--<input type='text' class='form-control' name='transmission' id='transmission2'>-->
+           <select class='form-control' name='transmission' id="transmission2">
+               <option></option>
+                <option value='1'>oui</option>
+                <option value='0'>non</option>
+           </select>
            <label for="prix2">Prix</label>
            <input type='text' class='form-control' name='prix' id='prix2'>
         </form>

@@ -2,7 +2,7 @@
 require 'fragmentHeader.html';
 require 'menuUtilisateur.html';
 //require_once './modele/utilisateur.php';
-require'./modele/gare.php'
+require_once'./modele/gare.php'
 ?>
 <h1><img src='./vue/espaceClient.png' style="width: 100px;height: 100px"> Espace personnelle</h1>
 <div class="tab">
